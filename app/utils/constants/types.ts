@@ -3,3 +3,8 @@ export interface RouteInterface {
 	label: string;
 	url: string;
 }
+
+export interface TableColumnInterface {
+	label: string;
+	accessor: string;
+}
