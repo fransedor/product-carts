@@ -9,6 +9,6 @@ export const ROUTE_LIST: RouteInterface[] = [
 	{
 		id: "carts",
 		label: "Carts",
-		url: "/cart"
+		url: "/carts"
 	},
 ]
