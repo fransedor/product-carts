@@ -17,7 +17,7 @@ export interface ProductInterface {
 const BE_SERVICE_URL = process.env.BE_SERVICE_URL;
 export const getProducts = async () => {
   try {
-    const response: { products: ProductInterface[] } = await fetcher(BE_SERVICE_URL + "/products?limit=20");
+    const response: { products: ProductInterface[] } = await fetcher(BE_SERVICE_URL + "/products?limit=3");
     return response.products;
   } catch (err) {
     throw new Error(err as string);
