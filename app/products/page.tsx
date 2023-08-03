@@ -5,6 +5,7 @@ import { getProducts } from "../service/products/getProducts";
 import { PRODUCT_TABLE_COLUMNS } from "../utils/constants/tableColumns";
 import FilterButton from "../components/FilterButton";
 import { FaFilter } from "react-icons/fa";
+import Pagination from "../components/Pagination";
 
 interface ProductListPageProps {
   params: Record<string, unknown>;
@@ -15,6 +16,7 @@ interface ProductListPageProps {
     priceRange?: string;
     category?: string;
     skip?: string;
+		page?: string;
   };
 }
 const ProductListPage = async ({ params, searchParams }: ProductListPageProps) => {
@@ -30,10 +32,11 @@ const ProductListPage = async ({ params, searchParams }: ProductListPageProps) =
   const productList = await getProducts();
   console.log(productList);
   return (
-    <div className="p-4 lg:p-8 w-full overflow-x-scroll">
+    <div className="p-4 lg:p-8 w-full">
       <h1 className="text-3xl font-bold mb-8">Product List page</h1>
       <FilterButton icon={<FaFilter />} filterBy="category" />
       <Table cols={PRODUCT_TABLE_COLUMNS} data={productList} action="product" />
+			<Pagination currentPage={parseInt(searchParams.page || "1")} totalPage={20}/>
     </div>
   );
 };

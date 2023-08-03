@@ -10,7 +10,7 @@ interface FilterButtonProps {
 const FilterButton: React.FC<FilterButtonProps> = ({ icon, filterBy }) => {
   const [openDropdown, setOpenDropdown] = useState(false);
   return (
-    <div className="relative">
+    <div className="relative my-8">
       <button
         className="flex items-center rounded-lg relative z-0 py-2 px-4 gap-2 border border-gray-300 shadow-md "
         onClick={() => setOpenDropdown(!openDropdown)}
