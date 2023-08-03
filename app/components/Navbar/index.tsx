@@ -25,7 +25,6 @@ const NavbarButtons: React.FC<NavbarButtonsProps> = ({ setOpenNavbar }) => {
 
 const Navbar = () => {
 	const pathname = usePathname();
-	console.log(pathname)
   const [openNavbar, setOpenNavbar] = useState(false);
   return (
     <>
@@ -33,11 +32,11 @@ const Navbar = () => {
       {openNavbar && (
         // Navbar expanded background
         <div
-          className="fixed w-screen h-screen top-0 bg-black bg-opacity-20"
+          className="fixed w-screen h-screen top-0 bg-black bg-opacity-20 z-50"
           onClick={() => setOpenNavbar(false)}
         >
           {/* Navbar expanded container */}
-          <div className="bg-white w-3/4 lg:w-1/4 h-screen p-8 flex flex-col gap-8">
+          <div className="relative bg-white w-3/4 lg:w-1/4 h-screen p-8 flex flex-col gap-8 z-50">
             {ROUTE_LIST.map((route) => (
               <Link href={route.url} key={route.id}>
                 <p className={`${pathname.includes(route.url) ? "text-green-400" : "text-black"}`}>{route.label}</p>
