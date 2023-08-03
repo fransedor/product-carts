@@ -6,8 +6,9 @@ import React, { useEffect, useState } from "react";
 interface FilterButtonProps {
   icon: React.ReactNode;
   filterBy: "category" | "brand" | "price";
+  filterOptions: string[];
 }
-const FilterButton: React.FC<FilterButtonProps> = ({ icon, filterBy }) => {
+const FilterButton: React.FC<FilterButtonProps> = ({ icon, filterBy, filterOptions }) => {
   const [openDropdown, setOpenDropdown] = useState(false);
   return (
     <div className="relative my-8">
@@ -19,10 +20,10 @@ const FilterButton: React.FC<FilterButtonProps> = ({ icon, filterBy }) => {
         <p className="capitalize">{filterBy}</p>
       </button>
       {openDropdown && (
-        <div className="absolute top-12 left-0 flex flex-col bg-white rounded-lg border-gray-300 shadow-md z-10">
-          <FilterOption filterBy={filterBy} value="phones" />
-          <FilterOption filterBy={filterBy} value="books" />
-          <FilterOption filterBy={filterBy} value="cookie" />
+        <div className="absolute top-12 left-0 flex flex-col bg-white rounded-lg border-gray-300 shadow-md z-10 max-h-96 overflow-y-scroll">
+          {filterOptions.map((filterValue) => (
+            <FilterOption filterBy={filterBy} value={filterValue} key={filterValue} />
+          ))}
         </div>
       )}
     </div>
@@ -34,31 +35,32 @@ interface FilterOptionsProps {
   value: string;
 }
 const FilterOption: React.FC<FilterOptionsProps> = ({ filterBy, value }) => {
-	const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const [isChecked, setIsChecked] = useState(searchParams.getAll(filterBy).includes(value));
-	const router = useRouter();
-	const pathname = usePathname();
+  const router = useRouter();
+  const pathname = usePathname();
 
-	const handleClickOption = () => {
+  const handleClickOption = () => {
     const params = new URLSearchParams(searchParams.toString());
-		const currentFilterParams = searchParams.getAll(filterBy);
+    const currentFilterParams = searchParams.getAll(filterBy);
     // Remove current option from searchParams
     if (currentFilterParams.includes(value)) {
-			params.delete(filterBy);
+      params.delete(filterBy);
       currentFilterParams.forEach((currentFilterParamsValue) => {
-				if (currentFilterParamsValue !== value) {
-					params.append(filterBy, currentFilterParamsValue)
-				}
-			})
+        if (currentFilterParamsValue !== value) {
+          params.append(filterBy, currentFilterParamsValue);
+        }
+      });
     } else {
       params.append(filterBy, value);
     }
-		router.push(pathname + "?" + params.toString());
+		params.set("page", "1");
+    router.push(pathname + "?" + params.toString());
   };
 
-	useEffect(() => {
-		setIsChecked(searchParams.getAll(filterBy).includes(value))
-	}, [searchParams, filterBy, value])
+  useEffect(() => {
+    setIsChecked(searchParams.getAll(filterBy).includes(value));
+  }, [searchParams, filterBy, value]);
   return (
     <button className="flex py-2 px-4 gap-2 items-center" onClick={handleClickOption}>
       <input type="checkbox" checked={isChecked} readOnly />

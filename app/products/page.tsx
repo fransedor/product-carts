@@ -6,37 +6,22 @@ import { PRODUCT_TABLE_COLUMNS } from "../utils/constants/tableColumns";
 import FilterButton from "../components/FilterButton";
 import { FaFilter } from "react-icons/fa";
 import Pagination from "../components/Pagination";
+import { SearchParamsInterface } from "../utils/types";
+import { getAllCategories } from "../service/products/getCategories";
 
 interface ProductListPageProps {
   params: Record<string, unknown>;
-  searchParams: {
-    search?: string;
-    brand?: string;
-    // Dash seperated value e.g.: 0-500
-    priceRange?: string;
-    category?: string;
-    skip?: string;
-		page?: string;
-  };
+  searchParams: SearchParamsInterface;
 }
 const ProductListPage = async ({ params, searchParams }: ProductListPageProps) => {
-  const createFetcherUrl = () => {
-    // If user filter by brand or price range, use client side pagination
-    if (searchParams.search) {
-    }
-    // else use server-side pagination
-  };
-  // BECAUSE FILTER BY BRAND AND PRICE RANGE IS NOT PROVIDED BY DUMMYJSON API,
-  // WE MUST RESORT TO CLIENT-BASED PAGINATION AND FILTER, OR
-  // USE STATIC BRAND AND PRICE RANGE DATA
-  const productList = await getProducts();
-  console.log(productList);
+  const { products: productList, totalPage } = await getProducts(searchParams);
+  const allCategories = await getAllCategories();
   return (
     <div className="p-4 lg:p-8 w-full">
       <h1 className="text-3xl font-bold mb-8">Product List page</h1>
-      <FilterButton icon={<FaFilter />} filterBy="category" />
+      <FilterButton icon={<FaFilter />} filterBy="category" filterOptions={allCategories} />
       <Table cols={PRODUCT_TABLE_COLUMNS} data={productList} action="product" />
-			<Pagination currentPage={parseInt(searchParams.page || "1")} totalPage={20}/>
+      <Pagination currentPage={parseInt(searchParams.page || "1")} totalPage={totalPage} />
     </div>
   );
 };

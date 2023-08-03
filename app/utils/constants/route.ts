@@ -1,4 +1,4 @@
-import { RouteInterface } from "./types";
+import { RouteInterface } from "../types";
 
 export const ROUTE_LIST: RouteInterface[] = [
 	{

@@ -1,4 +1,4 @@
-import { TableColumnInterface } from "@/app/utils/constants/types";
+import { TableColumnInterface } from "@/app/utils/types";
 import React from "react";
 
 interface TableHeaderProps {
