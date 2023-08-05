@@ -67,7 +67,6 @@ const getProductsBySearch = async (
     const allFilteredProductsBySearch = currentProducts.filter((product) =>
       product.title.toLowerCase().includes(searchValue.toLowerCase())
     );
-    console.log("searched", allFilteredProductsBySearch);
     return {
       products: allFilteredProductsBySearch.slice(
         filteredProductsStartIndex,
@@ -111,18 +110,24 @@ const getProductsByBrand = (
   };
 };
 
-const getProductsByPriceRange = (
+const getProductsByPrice = (
   currentProducts: ProductInterface[],
-  priceRange: string | string[],
+  price: string | string[],
   page: string
 ) => {
   // Price range is dash seperated string or string array ("0-100" or ["0-100", "201-300"])
   // there is no guarantee that the price range string is sorted
-  const priceRangeArray = typeof priceRange === "string" ? [priceRange] : priceRange;
+  const priceArray = typeof price === "string" ? [price] : price;
   const filteredProducts = [];
-  for (const range of priceRangeArray) {
-    const min = parseInt(range.split("-")[0]);
-    const max = parseInt(range.split("-")[1]);
+  for (const range of priceArray) {
+    let min = 0;
+    let max = Number.MAX_SAFE_INTEGER;
+    if (range.includes(">")) {
+      min = parseInt(range.split(">")[1]);
+    } else {
+      min = parseInt(range.split("-")[0]);
+      max = parseInt(range.split("-")[1]);
+    }
     filteredProducts.push(
       ...currentProducts.filter((product) => product.price >= min && product.price <= max)
     );
@@ -140,7 +145,7 @@ export const getProducts = async ({
   brand,
   category,
   page = "1",
-  priceRange,
+  price,
   search,
   skip,
 }: SearchParamsInterface) => {
@@ -164,8 +169,8 @@ export const getProducts = async ({
       return { products, totalPage: 1 };
     }
   }
-  // IF THERE IS NO CATEGORY AND SEARCH, DO CLIENT SIDE FILTERING
-  if (!products.length) {
+  // IF THERE IS NO FILTER, RETURN PAGINATED PRODUCTS FROM API 
+  if (!products.length && !brand && !price) {
     try {
       const response: { products: ProductInterface[]; total: number } = await fetcher(
         `${BE_SERVICE_URL}/products?limit=${PRODUCTS_PER_PAGE}&skip=${(parseInt(page) - 1) * 10}`
@@ -175,19 +180,31 @@ export const getProducts = async ({
     } catch (err) {
       throw new Error(err as string);
     }
-  }
+  } else {
+		// IF THERE IS FILTER, FETCH ALL PRODUCTS FROM API AND DO CLIENT SIDE PAGINATION
+		try {
+      const response: { products: ProductInterface[]; total: number } = await fetcher(
+        `${BE_SERVICE_URL}/products?limit=2000`
+      );
+      products = response.products;
+      total = Math.ceil(response.total / PRODUCTS_PER_PAGE);
+
+    } catch (err) {
+      throw new Error(err as string);
+    }
+	}
   if (brand) {
     const { products: productsByBrand, totalPage } = getProductsByBrand(products, brand, page);
     products = productsByBrand;
     total = totalPage;
   }
-  if (priceRange) {
-    const { products: productsByPriceRange, totalPage } = getProductsByPriceRange(
+  if (price) {
+    const { products: productsByPrice, totalPage } = getProductsByPrice(
       products,
-      priceRange,
+      price,
       page
     );
-    products = productsByPriceRange;
+    products = productsByPrice;
     total = totalPage;
   }
   return { products, totalPage: total === 0 ? 1 : total };

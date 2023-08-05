@@ -13,7 +13,7 @@ export interface SearchParamsInterface {
   search?: string;
   brand?: string | string[];
   // Dash seperated value e.g.: 0-500
-  priceRange?: string | string[];
+  price?: string | string[];
   category?: string | string[];
   skip?: string;
   page?: string;

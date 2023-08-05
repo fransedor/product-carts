@@ -27,6 +27,10 @@ const Searchbar: React.FC<React.HTMLAttributes<HTMLButtonElement>> = (props) => 
     [handleSearch]
   );
 
+	useEffect(() => {
+		setSearchValue(searchParams.get("search") || "")
+	}, [searchParams])
+
   useEffect(() => {
     document.addEventListener("keydown", handleClickEnter);
     return () => {
