@@ -43,18 +43,18 @@ export const getAllCarts = async (page: string) => {
       total: response.total,
       limit: response.limit,
       skip: response.skip,
-			isError: false,
-			errorMessage: "",
+      isError: false,
+      errorMessage: "",
     };
   } catch (err) {
     return {
-			isError: true,
-			errorMessage: err as string,
-			cartTableData: [],
-			total: 0,
-			limit: 0,
-			skip: 0,
-		}
+      isError: true,
+      errorMessage: err as string,
+      cartTableData: [],
+      total: 0,
+      limit: 0,
+      skip: 0,
+    };
   }
 };
 
@@ -78,6 +78,7 @@ const getCartTableData = async (carts: CartResponseInterface[]) => {
       usernameList.forEach((username, index) => {
         const usernameFetched =
           username.status === "fulfilled" ? (username as PromiseFulfilledResult<string>) : null;
+        console.log("usernameFetched", usernameFetched);
         cartTableData.push({
           id: carts[index].id,
           productName: carts[index].products.map((product) => product.title).toString(),
