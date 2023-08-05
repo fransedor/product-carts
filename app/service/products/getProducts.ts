@@ -151,32 +151,15 @@ export const getProducts = async ({
 }: SearchParamsInterface) => {
   let products: ProductInterface[] = [];
   let total = 0;
-  if (category) {
-    const { products: productsByCategory, totalPage } = await getProductsByCategory(category, page);
-    products = productsByCategory;
-    total = totalPage;
-  }
-  if (search) {
-    const { products: productsBySearch, totalPage } = await getProductsBySearch(
-      products,
-      search,
-      page
-    );
-    products = productsBySearch;
-    total = totalPage;
-    // IF NOT FOUND ON SEARCH, DO NOT LET IT GO DOWN THE FUNCTION AS ALL PRODUCT WILL GET FETCHED DOWN BELOW
-    if (!products.length) {
-      return { products, totalPage: 1 };
-    }
-  }
-  // IF THERE IS NO FILTER, RETURN PAGINATED PRODUCTS FROM API 
-  if (!products.length && !brand && !price) {
+	// IF NO FILTER, RETURN PAGINATED PRODUCTS FROM API
+	if (!brand && !price && !search && !category) {
     try {
       const response: { products: ProductInterface[]; total: number } = await fetcher(
         `${BE_SERVICE_URL}/products?limit=${PRODUCTS_PER_PAGE}&skip=${(parseInt(page) - 1) * 10}`
       );
       products = response.products;
       total = Math.ceil(response.total / PRODUCTS_PER_PAGE);
+			return { products, totalPage: total };
     } catch (err) {
       throw new Error(err as string);
     }
@@ -193,6 +176,21 @@ export const getProducts = async ({
       throw new Error(err as string);
     }
 	}
+  if (category) {
+    const { products: productsByCategory, totalPage } = await getProductsByCategory(category, page);
+    products = productsByCategory;
+    total = totalPage;
+  }
+  if (search) {
+    const { products: productsBySearch, totalPage } = await getProductsBySearch(
+      products,
+      search,
+      page
+    );
+    products = productsBySearch;
+    total = totalPage;
+  }
+  
   if (brand) {
     const { products: productsByBrand, totalPage } = getProductsByBrand(products, brand, page);
     products = productsByBrand;
