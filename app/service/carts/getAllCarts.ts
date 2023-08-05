@@ -48,7 +48,7 @@ export const getAllCarts = async (page: string) => {
 	}
 }
 
-const getUsernameById = async (id: number) => {
+export const getUsernameById = async (id: number) => {
 	try {
 		const response = await fetcher(
 			`${BE_SERVICE_URL}/users/${id}`

@@ -6,7 +6,7 @@ import TableBody from "./TableBody";
 interface TableProps<T extends { id: number }> {
   cols: TableColumnInterface[];
   data: T[];
-  renderAction?: (rowData?: T) => React.ReactNode;
+  renderAction?: (rowData: T) => React.ReactNode;
 }
 
 function Table<T extends { id: number }>({ cols, data, renderAction }: TableProps<T>) {

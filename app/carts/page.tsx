@@ -3,8 +3,7 @@ import Table from "../components/Table";
 import Pagination from "../components/Pagination";
 import { getAllCarts } from "../service/carts/getAllCarts";
 import { CART_TABLE_COLUMNS } from "../utils/constants/tableColumns";
-import { FaEye } from "react-icons/fa";
-import ActionButton from "./actionButton";
+import ActionButton from "./ActionButton";
 
 interface CartListPageProps {
   params: Record<string, unknown>;
