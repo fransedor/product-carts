@@ -36,7 +36,6 @@ export const getAllCarts = async (page: string) => {
     const response: GetAllCartsResponseInterface = await fetcher(
       `${BE_SERVICE_URL}/carts?limit=${CARTS_PER_PAGE}&skip=${(parseInt(page) - 1) * 10}`
     );
-    console.log("fetch all carts response", response);
     const cartTableData = await getCartTableData(response.carts);
     return {
       cartTableData,
