@@ -47,7 +47,7 @@ const Searchbar: React.FC<React.HTMLAttributes<HTMLButtonElement>> = (props) => 
         className="outline-none"
         placeholder={props.placeholder}
       />
-      <button className="py-1 px-2 bg-green-300 rounded-lg">Search</button>
+      <button className="py-1 px-2 bg-green-300 rounded-lg shadow-md">Search</button>
     </div>
   );
 };

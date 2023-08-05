@@ -1,7 +1,8 @@
 "use client";
 
+import useClickOutside from "@/app/utils/hooks/useClickOutside";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface FilterButtonProps {
   icon: React.ReactNode;
@@ -10,8 +11,11 @@ interface FilterButtonProps {
 }
 const FilterButton: React.FC<FilterButtonProps> = ({ icon, filterBy, filterOptions }) => {
   const [openDropdown, setOpenDropdown] = useState(false);
+	const ref = useRef<HTMLDivElement>(null);
+
+	useClickOutside(ref, () => setOpenDropdown(false));
   return (
-    <div className="relative my-8">
+    <div ref={ref} className="relative my-8">
       <button
         className="flex items-center rounded-lg relative z-0 py-2 px-4 gap-2 border border-gray-300 shadow-md "
         onClick={() => setOpenDropdown(!openDropdown)}
@@ -20,7 +24,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({ icon, filterBy, filterOptio
         <p className="capitalize">{filterBy}</p>
       </button>
       {openDropdown && (
-        <div className="absolute top-12 left-0 flex flex-col bg-white rounded-lg border-gray-300 shadow-md z-10 max-h-96 overflow-y-scroll">
+        <div  className="absolute top-12 left-0 flex flex-col bg-white rounded-lg border-gray-300 shadow-md z-10 max-h-96 overflow-y-scroll">
           {filterOptions.map((filterValue) => (
             <FilterOption filterBy={filterBy} value={filterValue} key={filterValue} />
           ))}
@@ -64,7 +68,7 @@ const FilterOption: React.FC<FilterOptionsProps> = ({ filterBy, value }) => {
   return (
     <button className="flex py-2 px-4 gap-2 items-center" onClick={handleClickOption}>
       <input type="checkbox" checked={isChecked} readOnly />
-      <div className="py-2 px-4">{value}</div>
+      <p className="py-2 px-4 text-start">{value}</p>
     </button>
   );
 };
