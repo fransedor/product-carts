@@ -21,8 +21,8 @@ const PRODUCTS_PER_PAGE = 10;
 const getProductsByCategory = async (category: string | string[], page: string) => {
   let products = [];
   let totalPage = 0;
-	const filteredProductsStartIndex = (parseInt(page) - 1) * 10;
-	const filteredProductsEndIndex = parseInt(page) * 10;
+  const filteredProductsStartIndex = (parseInt(page) - 1) * 10;
+  const filteredProductsEndIndex = parseInt(page) * 10;
 
   if (typeof category == "string") {
     try {
@@ -32,7 +32,7 @@ const getProductsByCategory = async (category: string | string[], page: string) 
         }&limit=${PRODUCTS_PER_PAGE}`
       );
       products.push(...response.products);
-      totalPage = response.total
+      totalPage = response.total;
     } catch (err) {
       throw new Error(err as string);
     }
@@ -48,9 +48,12 @@ const getProductsByCategory = async (category: string | string[], page: string) 
         throw new Error(err as string);
       }
     }
-		totalPage = products.length
+    totalPage = products.length;
   }
-  return { products: products.slice(filteredProductsStartIndex, filteredProductsEndIndex), totalPage: Math.ceil(totalPage / PRODUCTS_PER_PAGE) };
+  return {
+    products: products.slice(filteredProductsStartIndex, filteredProductsEndIndex),
+    totalPage: Math.ceil(totalPage / PRODUCTS_PER_PAGE),
+  };
 };
 
 const getProductsBySearch = async (
@@ -62,8 +65,9 @@ const getProductsBySearch = async (
     const filteredProductsStartIndex = (parseInt(page) - 1) * 10;
     const filteredProductsEndIndex = parseInt(page) * 10;
     const allFilteredProductsBySearch = currentProducts.filter((product) =>
-      product.title.includes(searchValue)
+      product.title.toLowerCase().includes(searchValue.toLowerCase())
     );
+    console.log("searched", allFilteredProductsBySearch);
     return {
       products: allFilteredProductsBySearch.slice(
         filteredProductsStartIndex,
@@ -155,6 +159,10 @@ export const getProducts = async ({
     );
     products = productsBySearch;
     total = totalPage;
+    // IF NOT FOUND ON SEARCH, DO NOT LET IT GO DOWN THE FUNCTION AS ALL PRODUCT WILL GET FETCHED DOWN BELOW
+    if (!products.length) {
+      return { products, totalPage: 1 };
+    }
   }
   // IF THERE IS NO CATEGORY AND SEARCH, DO CLIENT SIDE FILTERING
   if (!products.length) {
@@ -182,5 +190,5 @@ export const getProducts = async ({
     products = productsByPriceRange;
     total = totalPage;
   }
-  return { products, totalPage: total };
+  return { products, totalPage: total === 0 ? 1 : total };
 };

@@ -8,6 +8,7 @@ import { FaFilter } from "react-icons/fa";
 import Pagination from "../components/Pagination";
 import { SearchParamsInterface } from "../utils/types";
 import { getAllCategories } from "../service/products/getCategories";
+import Searchbar from "../components/Searchbar";
 
 interface ProductListPageProps {
   params: Record<string, unknown>;
@@ -19,7 +20,10 @@ const ProductListPage = async ({ params, searchParams }: ProductListPageProps) =
   return (
     <div className="p-4 lg:p-8 w-full">
       <h1 className="text-3xl font-bold mb-8">Product List page</h1>
+			<div className="flex justify-between items-center flex-col-reverse lg:flex-row">
       <FilterButton icon={<FaFilter />} filterBy="category" filterOptions={allCategories} />
+			<Searchbar />
+			</div>
       <Table cols={PRODUCT_TABLE_COLUMNS} data={productList} action="product" />
       <Pagination currentPage={parseInt(searchParams.page || "1")} totalPage={totalPage} />
     </div>
