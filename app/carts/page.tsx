@@ -13,7 +13,6 @@ interface CartListPageProps {
 }
 const CartListPage = async ({ params, searchParams }: CartListPageProps) => {
   const { cartTableData, limit, skip, total } = await getAllCarts(searchParams.page || "1");
-	console.log("cartTableData", cartTableData);
   return (
     <div className="p-4 lg:p-8 w-full">
       <h1 className="text-3xl font-bold mb-8">Cart List page</h1>
