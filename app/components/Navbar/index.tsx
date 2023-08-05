@@ -1,6 +1,6 @@
 "use client";
 
-import { ROUTE_LIST } from "@/app/utils/constants/route";
+import { ROUTE_LIST } from "@/app/utils/constants/routelList";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
