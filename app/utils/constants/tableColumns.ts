@@ -20,3 +20,26 @@ export const PRODUCT_TABLE_COLUMNS = [
 		accessor: "price",
 	},
 ]
+
+export const CART_TABLE_COLUMNS = [
+	{
+		label: "Product names",
+		accessor: "productName"
+	},
+	{
+		label: "Total price",
+		accessor: "total"
+	},
+	{
+		label: "User",
+		accessor: "username"
+	},
+	{
+		label: "Total Products",
+		accessor: "totalProducts"
+	},
+	{
+		label: "Total Quantity",
+		accessor: "totalQuantity"
+	},
+]

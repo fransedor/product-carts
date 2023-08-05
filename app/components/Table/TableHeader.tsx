@@ -3,8 +3,9 @@ import React from "react";
 
 interface TableHeaderProps {
   cols: TableColumnInterface[];
+  hasAction?: boolean;
 }
-const TableHeader: React.FC<TableHeaderProps> = ({ cols }) => {
+const TableHeader: React.FC<TableHeaderProps> = ({ cols, hasAction }) => {
   return (
     <thead className="border-b bg-green-300 font-medium">
       <tr>
@@ -16,9 +17,11 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cols }) => {
             {column.label}
           </th>
         ))}
+				{hasAction && (
         <th scope="col" className="px-6 py-4">
           Actions
         </th>
+				)}
       </tr>
     </thead>
   );

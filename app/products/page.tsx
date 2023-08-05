@@ -29,7 +29,7 @@ const ProductListPage = async ({ params, searchParams }: ProductListPageProps) =
         </div>
         <Searchbar placeholder="Search products"/>
       </div>
-      <Table cols={PRODUCT_TABLE_COLUMNS} data={productList} action="product" />
+      <Table cols={PRODUCT_TABLE_COLUMNS} data={productList} />
       <Pagination currentPage={parseInt(searchParams.page || "1")} totalPage={totalPage} />
     </div>
   );
