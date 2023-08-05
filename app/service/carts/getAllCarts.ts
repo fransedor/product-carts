@@ -68,29 +68,16 @@ export const getUsernameById = async (id: number) => {
 
 const getCartTableData = async (carts: CartResponseInterface[]) => {
   let cartTableData: CartTableDataInterface[] = [];
-  const promises: Promise<any>[] = [];
-  for (const cart of carts) {
-    promises.push(getUsernameById(cart.userId));
-  }
-  Promise.allSettled(promises)
-    .then((usernameList) => {
-      usernameList.forEach((username, index) => {
-        const usernameFetched =
-          username.status === "fulfilled" ? (username as PromiseFulfilledResult<string>) : null;
-        console.log("usernameFetched", usernameFetched);
-        cartTableData.push({
-          id: carts[index].id,
-          productName: carts[index].products.map((product) => product.title).toString(),
-          total: carts[index].total,
-          totalProducts: carts[index].totalProducts,
-          totalQuantity: carts[index].totalQuantity,
-          username: usernameFetched ? usernameFetched.value : "-",
-        });
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      throw new Error(err as string);
-    });
+	for (const cart of carts) {
+		const username = await getUsernameById(cart.userId);
+		cartTableData.push({
+			id: cart.id,
+			productName: cart.products.map((product) => product.title).toString(),
+			total: cart.total,
+			totalProducts: cart.totalProducts,
+			totalQuantity: cart.totalQuantity,
+			username
+		})
+	}
   return cartTableData;
 };
